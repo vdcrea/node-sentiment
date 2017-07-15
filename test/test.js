@@ -23,13 +23,6 @@ describe('Italian', function() {
     });
 });
 
-describe('Spanish', function() {
-    it('It should return positive or negative', function() {
-        assert.equal('negative', sentiment('Los gatos son estúpidos.', 'es').vote);
-        assert.equal('positive', sentiment('Los gatos son totalmente increíble!', 'es').vote);
-    });
-});
-
 describe('Wrong language', function() {
     it('It should return positive, negative or neutral', function() {
         assert.equal('positive', sentiment('Seems somebody had a good meal! #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY', 'en').vote);
@@ -37,3 +30,14 @@ describe('Wrong language', function() {
         assert.equal('neutral', sentiment('Seems somebody had a good meal! #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY', 'it').vote);
     });
 });
+
+describe('Emoji support', function() {
+    it('It should return positive or negative in any language', function() {
+        assert.equal('positive', sentiment('♥', 'en').vote);
+        assert.equal('positive', sentiment('♥', 'it').vote);
+        assert.equal('negative', sentiment('😭', 'en').vote);
+        assert.equal('negative', sentiment('😭', 'it').vote);
+    });
+});
+
+// @todo test negation

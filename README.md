@@ -1,12 +1,16 @@
 # sentiment-multilang
-### Multilanguage AFINN-based sentiment analysis for Node.js
+### Multilanguage AFINN-based and emojis sentiment analysis for Node.js
 
 Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
-It supports the following languages: English, French, Spanish, and Italian. For languages other than english, it uses a locale transposition of AFINN-111 wordlist. The wordlist can be extended adding words too.
+He can detect automaticaly the lang if it's not provided at call.
+
+He has full support on emoji analysis.
+
+This project is the fork of the original sentiment project: https://github.com/thisandagain/sentiment
 
 ## Installation
-`npm install sentiment-multilang`
+`npm install sentiment-multilang --save`
 
 ## Usage
 ```javascript
@@ -29,5 +33,5 @@ console.dir(r4);        // Vote: 'positive'
 
 ## Test
 ```bash
-mocha test
+npm test
 ```
