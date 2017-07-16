@@ -28,6 +28,35 @@ console.dir(r2);        // Vote: 'positive'
 
 var r3 = sentiment('I gatti sono stupidi. 😭','it');
 console.dir(r3);        // Vote: 'negative'
+
+// Sample response for "Seems somebody had a good meal! @wildelifeanimal #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY ♥"
+{
+  score: 8,
+  comparative: 0.5,
+  vote: 'positive',
+  tokens:
+   [ 'seems',
+     'somebody',
+     'had',
+     'a',
+     'good',
+     'meal',
+     '@wildelifeanimal',
+     'lion',
+     'safari',
+     'cats',
+     'wildlife',
+     'africa',
+     'adventure',
+     'offroad',
+     'httpstco6cx7halryy',
+     '♥' ],
+  words: [ '♥', 'adventure', 'good' ],
+  positive: [ '♥', 'adventure', 'good' ],
+  negative: [],
+  language: 'en'
+}
+
 ```
 
 ## Test
