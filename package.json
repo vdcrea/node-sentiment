@@ -38,5 +38,8 @@
   },
   "devDependencies": {
     "mocha": "^3.0.2"
+  },
+  "dependencies": {
+    "languagedetect": "^1.1.1"
   }
 }

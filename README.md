@@ -7,7 +7,7 @@ He can detect automaticaly the lang if it's not provided at call.
 
 He has full support on emoji analysis.
 
-This project is the fork of the original sentiment project: https://github.com/thisandagain/sentiment
+This project is a fork of the original sentiment project: https://github.com/thisandagain/sentiment
 
 ## Installation
 `npm install sentiment-multilang --save`
@@ -20,15 +20,14 @@ var sentiment = require('sentiment-multilang');
 // Use the module to get sentiment from texts.
 var r1 = sentiment('Cats are stupid.','en');
 console.dir(r1);        // Vote: 'negative'
+var r1 = sentiment('Cats are stupid.');
+console.dir(r1);        // Vote: 'negative' and english detected
 
-var r2 = sentiment('Cats are totally amazing!','en');
+var r2 = sentiment('Cats are totally amazing! ♥','en');
 console.dir(r2);        // Vote: 'positive'
 
-var r3 = sentiment('I gatti sono stupidi.','it');
+var r3 = sentiment('I gatti sono stupidi. 😭','it');
 console.dir(r3);        // Vote: 'negative'
-
-var r4 = sentiment('I gatti sono totalmente stupendi!','it');
-console.dir(r4);        // Vote: 'positive'
 ```
 
 ## Test
