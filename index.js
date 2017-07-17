@@ -12,81 +12,88 @@ function tokenize(input) {
 };
 
 // Performs sentiment analysis on the provided input 'phrase'
-module.exports = function (phrase, lang, callback) {
-  // Parse arguments
-  if (typeof phrase === 'undefined') phrase = '';
-  if ((typeof(lang) === 'undefined') || !afinn["langs"][lang]) lang = null;
-  if (typeof callback === 'undefined') callback = null;
+module.exports = function (sPhrase, sLangCode, mCallback) {
+
+  if (typeof sPhrase === 'undefined') {
+    sPhrase = '';
+  }
 
   // Storage objects
-  var tokens = tokenize(phrase),
-    score = 0,
-    words = [],
-    positive = [],
-    negative = [];
+  var aTokens = tokenize(sPhrase),
+    iGlobalScore = 0,
+    aWords = [],
+    aPositive = [],
+    aNegative = [],
+    bNegation = false;
 
-
-  if (lang == null) {
-    var aDetectedLang = oLangDetect.detect(tokens.join(' '), 1);
+  // Detect language if needed (beta must be performed on each word for more efficiency)
+  if (sLangCode == null) {
+    var aDetectedLang = oLangDetect.detect(aTokens.join(' '), 1);
     if (aDetectedLang[0]) {
-      lang = aDetectedLang[0][0].substring(0, 2);
+      sLangCode = aDetectedLang[0][0].substring(0, 2);
     }
   }
 
-  // Iterate over tokens if language is knowned
-  var len = tokens.length;
+  // Iterate over tokens
+  var len = aTokens.length;
   while (len--) {
+    var sToken = String(aTokens[len]), iCurrentScore = 0;
 
-    var negation = (afinn["negations"][lang] && afinn["negations"][lang][tokens[len - 1]]) ? -1 : 1,
-      obj = afinn["truncated"][lang]
-        ? tokens[len].replace(/[aeiouúäâàáéèëêïîíìöôùüû]$/, "")
-        : String(tokens[len]);
+    // Negation flag
+    if (afinn["negations"][sLangCode] && afinn["negations"][sLangCode][sToken]) {
+      bNegation = true;
+    }
 
-    if (! afinn[lang] || ! afinn[lang][obj]) {
-      if (! afinn['emoji'][obj]) {
+    if (! afinn[sLangCode] || ! afinn[sLangCode][sToken]) {
+      if (! afinn['emoji'][sToken]) {
+        console.log('Not processed: ' + sToken);
         continue;
       }
-
       // It's an emoji
-      item = Number(afinn['emoji'][obj]);
+      iCurrentScore = Number(afinn['emoji'][sToken]);
     } else {
-      // var prevobj = (len > 0) ? String(tokens[len-1]): "";
-      var item = Number(afinn[lang][obj]);
+      // It's a word
+      iCurrentScore = Number(afinn[sLangCode][sToken]);
     }
 
-
-    words.push(obj);
-    if (item > 0) {
-      positive.push(obj);
-    } else if (item < 0) {
-      negative.push(obj);
+    aWords.push(String(sToken));
+    if (iCurrentScore > 0) {
+      aPositive.push(String(sToken));
+    } else if (iCurrentScore < 0) {
+      aNegative.push(String(sToken));
     }
-    score += item * negation;
+    iGlobalScore += iCurrentScore;
   }
+
+  // Handle negation detection flag
+  iGlobalScore = iGlobalScore * (bNegation === true ? -1 : 1);
 
   // Handle optional async interface
-  var result = {
-    score: score,
-    comparative: score / tokens.length,
+  var oResult = {
+    score: iGlobalScore,
+    comparative: iGlobalScore / aTokens.length,
     vote: 'neutral',
-    tokens: tokens,
-    words: words,
-    positive: positive,
-    negative: negative,
-    language: lang
+    tokens: aTokens,
+    words: aWords,
+    positive: aPositive,
+    negative: aNegative,
+    language: sLangCode
   };
+
+  oResult.negation = bNegation;
+
   // Classify text as positive, negative or neutral.
-  if (result.score > 0) {
-    result.vote = 'positive';
-  } else if (result.score < 0) {
-    result.vote = 'negative';
+  if (oResult.score > 0) {
+    oResult.vote = 'positive';
+  } else if (oResult.score < 0) {
+    oResult.vote = 'negative';
   }
 
-  if (callback === null) {
-    return result;
+  if (mCallback == null) {
+    return oResult;
   }
 
   process.nextTick(function () {
-    callback(null, result);
+    mCallback(null, oResult);
   });
 };
