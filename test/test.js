@@ -9,31 +9,33 @@ var assert = require('assert');
 // Require the sentiment module
 var sentiment = require('../index');
 
-var sText = 'Seems somebody had a good meal! @wildelifeanimal #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY';
+var sTextEn = 'Seems somebody had a good meal! @wildelifeanimal #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY',
+  sTextFr = 'Tout le monde a bien manger! @wildelifeanimal #lion #safari #felins #viesauvage #Afrique #aventure #touterrain https://t.co/6cX7hAlrYY';
 
-describe('English', function () {
+describe('Analyse in english', function () {
   it('It should return positive or negative', function () {
-    assert.equal(sentiment('Cats are stupid.', 'en').vote, 'negative');
-    assert.equal(sentiment('Cats are totally amazing!', 'en').vote, 'positive');
+    assert.equal(sentiment('Cats are stupid.', 'en').vote, 'negative', 'Negative detection in english');
+    assert.equal(sentiment('Cats are totally amazing!', 'en').vote, 'positive', 'Positive detection in english');
   });
 });
 
-describe('French', function () {
+describe('Analyse in french', function () {
   it('It should return positive or negative', function () {
-    assert.equal(sentiment('Les chats sont stupides.', 'fr').vote, 'negative');
-    assert.equal(sentiment('J\'aime bien les chats!', 'fr').vote, 'positive');
+    assert.equal(sentiment('Les chats sont stupides.', 'fr').vote, 'negative', 'Negative detection in french');
+    assert.equal(sentiment('J\'aime bien les chats!', 'fr').vote, 'positive', 'Positive detection in french');
   });
 });
 
-describe('Wrong language', function () {
-  it('It should return positive, negative or neutral', function () {
-    assert.equal(sentiment(sText, 'en').vote, 'positive');
-    assert.equal(sentiment(sText, 'fr').vote, 'neutral');
+describe('Wrong input language', function () {
+  it('It should return positive or neutral', function () {
+    assert.equal(sentiment(sTextEn, 'en').vote, 'positive', 'Good language with positive vote');
+    assert.equal(sentiment(sTextEn, 'fr').vote, 'neutral', 'Wrong language result is neutral vote');
+    assert.equal(sentiment(sTextEn, 'xxx').vote, 'neutral', 'Not existing language result is neutral vote');
   });
 });
 
 describe('Negation', function () {
-  it('It should handle negation and return a positive and a negative vote', function () {
+  it('check negation detection', function () {
     var oPositiveResponseFr = sentiment('j\'aime beaucoup ce morceau', 'fr'),
       oNegativeResponseFr = sentiment('C\'est de la merde ce morceau', 'fr'),
       oPositiveResponseEn = sentiment('Cats are so cool!', 'en'),
@@ -46,11 +48,19 @@ describe('Negation', function () {
   });
 });
 
-describe('Language detection', function () {
-  it('It should guess language and return a positive vote', function () {
-    var oResponse = sentiment(sText);
-    assert.equal(oResponse.vote, 'positive');
-    assert.equal(oResponse.language, 'en');
+describe('Language detection in english', function () {
+  it('It should guess english language and return a positive vote', function () {
+    var oResponse = sentiment(sTextEn);
+    assert.equal(oResponse.vote, 'positive', 'Must detect english positive message');
+    assert.equal(oResponse.language, 'en', 'Unable to detect english language');
+  });
+});
+
+describe('Language detection in french', function () {
+  it('It should guess french language and return a positive vote', function () {
+    var oResponse = sentiment(sTextFr);
+    assert.equal(oResponse.vote, 'positive', 'Must detect french positive message');
+    assert.equal(oResponse.language, 'fr', 'Unable to detect french language');
   });
 });
 

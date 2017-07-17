@@ -1,7 +1,7 @@
 /*
  * Multilanguage AFINN-based sentiment analysis for Node.js
  */
-var afinn = require('./lib/AFINN.js');
+var oDictionary = require('./lib/AFINN.js');
 var oLangDetect = new (require('languagedetect'));
 
 function tokenize(input) {
@@ -40,20 +40,19 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
     var sToken = String(aTokens[len]), iCurrentScore = 0;
 
     // Negation flag
-    if (afinn["negations"][sLangCode] && afinn["negations"][sLangCode][sToken]) {
+    if (oDictionary["negations"][sLangCode] && oDictionary["negations"][sLangCode][sToken]) {
       bNegation = true;
     }
 
-    if (! afinn[sLangCode] || ! afinn[sLangCode][sToken]) {
-      if (! afinn['emoji'][sToken]) {
-        console.log('Not processed: ' + sToken);
+    if (! oDictionary[sLangCode] || ! oDictionary[sLangCode][sToken]) {
+      if (! oDictionary['emoji'][sToken]) {
         continue;
       }
       // It's an emoji
-      iCurrentScore = Number(afinn['emoji'][sToken]);
+      iCurrentScore = Number(oDictionary['emoji'][sToken]);
     } else {
       // It's a word
-      iCurrentScore = Number(afinn[sLangCode][sToken]);
+      iCurrentScore = Number(oDictionary[sLangCode][sToken]);
     }
 
     aWords.push(String(sToken));
@@ -77,10 +76,9 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
     words: aWords,
     positive: aPositive,
     negative: aNegative,
+    negation: bNegation,
     language: sLangCode
   };
-
-  oResult.negation = bNegation;
 
   // Classify text as positive, negative or neutral.
   if (oResult.score > 0) {
