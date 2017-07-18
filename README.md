@@ -1,20 +1,22 @@
 # node-sentiment
-### Text sentiment analysis for Node.js
+### Text and emojis sentiment analysis for Node.js
 
 Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
 Multilanguage
 
-Lauguage auto detection if not provided at call.
+Language detection if not provided at call.
 
 He has full support on emoji analysis.
 
 This project is a fork of the original sentiment project: https://github.com/thisandagain/sentiment
 
+# Usage
+
 ## Installation
 `npm install node-sentiment --save`
 
-## Usage
+
 ```javascript
 // Require the sentiment-multilang module
 var sentiment = require('node-sentiment');
@@ -63,10 +65,23 @@ console.dir(sentiment('I gatti sono stupidi. 😭','it'));
   negative: [],
   language: 'en'
 }
-
 ```
 
-## Test
+You can also play with node-sentiment in a terminal.
+```bash
+node cli.js "Cats are not so cool..."
+```
+
+# Test
 ```bash
 npm test
 ```
+
+# Changelog
+
+### 18/07/2017 Minor release 0.0.5
+Whole code review and basic CLI interface addded and project renamed to node-sentiment for npm package
+
+### 17/07/2017 Minor release 0.0.4
+Negation detection fix
+Language detection feature POC added
