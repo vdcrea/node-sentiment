@@ -20,7 +20,7 @@
   },
   "files": [
     "index.js",
-    "example.js",
+    "cli.js",
     "lib"
   ],
   "bugs": {
@@ -31,7 +31,8 @@
   ],
   "homepage": "https://github.com/nicolasbonnici/node-sentiment#readme",
   "directories": {
-    "test": "test"
+    "test": "test",
+    "lib": "lib"
   },
   "scripts": {
     "test": "mocha test"

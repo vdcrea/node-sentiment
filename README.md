@@ -3,7 +3,7 @@
 
 Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
-Multilanguage
+Multilanguage, only support for english, italian and french but built to be easily extended to any language (contribution are welcome)
 
 Language detection if not provided at call.
 
@@ -18,7 +18,7 @@ This project is a fork of the original sentiment project: https://github.com/thi
 
 
 ```javascript
-// Require the sentiment-multilang module
+// Require the node-sentiment module
 var sentiment = require('node-sentiment');
 
 // Use the module to get sentiment from texts.
@@ -80,7 +80,8 @@ npm test
 # Changelog
 
 ### 18/07/2017 Minor release 0.0.5
-Whole code review and basic CLI interface addded and project renamed to node-sentiment for npm package
+Whole code review
+Basic CLI interface added and project renamed to node-sentiment for npm package
 
 ### 17/07/2017 Minor release 0.0.4
 Negation detection fix
