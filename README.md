@@ -1,13 +1,13 @@
-# node-sentiment
+# node-sentiment [![Build Status](https://travis-ci.org/nicolasbonnici/node-sentiment.svg?branch=master)](https://travis-ci.org/nicolasbonnici/node-sentiment)
 ### Text and emojis sentiment analysis for Node.js
 
 Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
-Multilanguage, only support for english, italian and french but built to be easily extended to any language (contribution are welcome)
-
-Language detection if not provided at call.
+Multilanguage, only full support for english and french (PR contributions are welcome)
 
 He has full support on emoji analysis.
+
+Language detection if not provided at call.
 
 This project is a fork of the original sentiment project: https://github.com/thisandagain/sentiment
 
