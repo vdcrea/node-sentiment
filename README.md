@@ -1,33 +1,40 @@
-# sentiment-multilang
-### Multilanguage AFINN-based and emojis sentiment analysis for Node.js
+# node-sentiment
+### Text sentiment analysis for Node.js
 
 Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
-He can detect automaticaly the lang if it's not provided at call.
+Multilanguage
+
+Lauguage auto detection if not provided at call.
 
 He has full support on emoji analysis.
 
 This project is a fork of the original sentiment project: https://github.com/thisandagain/sentiment
 
 ## Installation
-`npm install sentiment-multilang --save`
+`npm install node-sentiment --save`
 
 ## Usage
 ```javascript
 // Require the sentiment-multilang module
-var sentiment = require('sentiment-multilang');
+var sentiment = require('node-sentiment');
 
 // Use the module to get sentiment from texts.
-var r1 = sentiment('Cats are stupid.','en');
-console.dir(r1);        // Vote: 'negative'
-var r1 = sentiment('Cats are stupid.');
-console.dir(r1);        // Vote: 'negative' and english detected
 
-var r2 = sentiment('Cats are totally amazing! ♥','en');
-console.dir(r2);        // Vote: 'positive'
+// Vote: 'negative'
+console.dir(sentiment('Cats are stupid.','en'));
 
-var r3 = sentiment('I gatti sono stupidi. 😭','it');
-console.dir(r3);        // Vote: 'negative'
+// Vote: 'negative' and english detected
+console.dir(sentiment('Cats are stupid.'));
+
+// Vote: 'positive', english detected and negation detected
+console.dir(sentiment('Cats are not so stupid.'));
+
+// Vote: 'positive'
+console.dir(sentiment('Cats are totally amazing! ♥','en'));
+
+// Vote: 'negative'
+console.dir(sentiment('I gatti sono stupidi. 😭','it'));
 
 // Sample response for "Seems somebody had a good meal! @wildelifeanimal #lion #safari #cats #wildlife #Africa #adventure #offroad https://t.co/6cX7hAlrYY ♥"
 {

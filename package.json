@@ -1,5 +1,5 @@
 {
-  "name": "sentiment-multilang",
+  "name": "node-sentiment",
   "version": "0.0.3",
   "description": "Multilanguage and emojis AFINN-based sentiment analysis for Node.js",
   "license": "MIT",
@@ -16,7 +16,7 @@
   "author": "Nicolas Bonnici",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nicolasbonnici/sentiment-multilang.git"
+    "url": "git+https://github.com/nicolasbonnici/node-sentiment.git"
   },
   "files": [
     "index.js",
@@ -24,12 +24,12 @@
     "lib"
   ],
   "bugs": {
-    "url": "https://github.com/nicolasbonnici/sentiment-multilang/issues"
+    "url": "https://github.com/nicolasbonnici/node-sentiment/issues"
   },
   "maintainers": [
     "davidemiceli"
   ],
-  "homepage": "https://github.com/nicolasbonnici/sentiment-multilang#readme",
+  "homepage": "https://github.com/nicolasbonnici/node-sentiment#readme",
   "directories": {
     "test": "test"
   },
