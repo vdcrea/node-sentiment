@@ -3,8 +3,12 @@
  */
 var oDictionary = require('./lib/lexicon.js');
 var oLangDetect = new (require('languagedetect'));
-var sw = require('stopwords');
-var _ = require('lodash');
+var swEn = require('stopwords').english;
+var swFr = require('stopwords').french;
+var swEs = require('stopwords').spanish;
+var swIt = require('stopwords').italian;
+var swNl = require('stopwords').dutch;
+var swDe = require('stopwords').german;
 
 function tokenize(input) {
   return (input.constructor === Array) ? input : input
@@ -49,6 +53,42 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
       bNegation = true;
     }
 
+    // Is it a stopword?
+    switch (sLangCode) {
+      case 'en':
+        if (swEn.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      case 'fr':
+        if (swFr.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      case 'es':
+        if (swEs.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      case 'it':
+        if (swIt.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      case 'nl':
+        if (swNl.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      case 'de':
+        if (swDe.indexOf(sToken) == -1) {
+          meaningfulWords.push(sToken);
+        }
+        break;
+      default:
+        meaningfulWords.push(sToken);
+    }
+
     if (! oDictionary[sLangCode] || ! oDictionary[sLangCode][sToken]) {
       if (! oDictionary['emoji'][sToken]) {
         continue;
@@ -61,30 +101,6 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
     }
 
     aWords.push(String(sToken));
-
-    // Is it a stopword?
-    switch (sLangCode) {
-      case 'en':
-        if (!_.includes(sw.english, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      case 'fr':
-        if (!_.includes(sw.french, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      case 'es':
-        if (!_.includes(sw.spanish, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      case 'it':
-        if (!_.includes(sw.italian, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      case 'de':
-        if (!_.includes(sw.german, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      case 'nl':
-        if (!_.includes(sw.dutch, sToken)) { meaningfulWords.push(sToken); }
-        break;
-      default:
-        meaningfulWords.push(sToken);
-    }
 
     if (iCurrentScore > 0) {
       aPositive.push(String(sToken));
