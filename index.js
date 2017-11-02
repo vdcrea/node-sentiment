@@ -3,6 +3,8 @@
  */
 var oDictionary = require('./lib/AFINN.js');
 var oLangDetect = new (require('languagedetect'));
+var sw = require('stopwords');
+var _ = require('lodash');
 
 function tokenize(input) {
   return (input.constructor === Array) ? input : input
@@ -24,6 +26,7 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
   var aTokens = tokenize(sPhrase),
     iGlobalScore = 0,
     aWords = [],
+    meaningfulWords = [], // tokens/words with stopwords excluded
     aPositive = [],
     aNegative = [],
     bNegation = false;
@@ -58,6 +61,31 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
     }
 
     aWords.push(String(sToken));
+
+    // Is it a stopword?
+    switch (sLangCode) {
+      case 'en':
+        if (!_.includes(sw.english, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      case 'fr':
+        if (!_.includes(sw.french, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      case 'es':
+        if (!_.includes(sw.spanish, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      case 'it':
+        if (!_.includes(sw.italian, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      case 'de':
+        if (!_.includes(sw.german, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      case 'nl':
+        if (!_.includes(sw.dutch, sToken)) { meaningfulWords.push(sToken); }
+        break;
+      default:
+        meaningfulWords.push(sToken);
+    }
+
     if (iCurrentScore > 0) {
       aPositive.push(String(sToken));
     } else if (iCurrentScore < 0) {
@@ -73,6 +101,7 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
   var oResult = {
     score: iGlobalScore,
     comparative: iGlobalScore / aTokens.length,
+    comparativeMeaningfull: iGlobalScore / meaningfulWords.length,
     vote: 'neutral',
     tokens: aTokens,
     words: aWords,
