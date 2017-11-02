@@ -7,6 +7,7 @@ var oLangDetect = new (require('languagedetect'));
 function tokenize(input) {
   return input
     .toLowerCase()
+    .replace(/\r?\n|\r/g, ' ')
     .replace(/[.,\/#!$%\^&\*;:{}=_`\"~()]/g, '')
     .split(' ');
 };
