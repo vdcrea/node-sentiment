@@ -1,7 +1,7 @@
 /*
- * Multilanguage AFINN-based sentiment analysis for Node.js
+ * Multilanguage sentiment analysis for Node.js
  */
-var oDictionary = require('./lib/AFINN.js');
+var oDictionary = require('./lib/lexicon.js');
 var oLangDetect = new (require('languagedetect'));
 var sw = require('stopwords');
 var _ = require('lodash');
