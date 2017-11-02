@@ -104,6 +104,7 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
     comparativeMeaningfull: iGlobalScore / meaningfulWords.length,
     vote: 'neutral',
     tokens: aTokens,
+    meanings: meaningfulWords,
     words: aWords,
     positive: aPositive,
     negative: aNegative,
