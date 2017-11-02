@@ -5,7 +5,7 @@ var oDictionary = require('./lib/AFINN.js');
 var oLangDetect = new (require('languagedetect'));
 
 function tokenize(input) {
-  return input
+  return (input.constructor === Array) ? input : input
     .toLowerCase()
     .replace(/\r?\n|\r/g, ' ') // line breaks changed to space https://stackoverflow.com/a/10805292
     .replace(/[.,\/#!$%\^&\*;:{}=_`\"~()]/g, '')
