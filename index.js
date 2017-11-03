@@ -22,7 +22,7 @@ function sentences(tInput) {
     return [];
   }
   return (tInput.constructor === Array) ? tInput : tInput.split(/(?:\.|?|!|¿|¡|:|;)+/);
-}
+};
 
 /**
  * Split a sentence into words
@@ -149,7 +149,7 @@ function sentimentSentence(aSentenceTokens, sLangCode) {
   sentiment.score = sentiment.score * (bNegation === true ? -1 : 1);
 
   return sentiment;
-}
+};
 
 
 /**
@@ -190,7 +190,7 @@ function sentimentText(aTextSentences, sLangCode) {
   sentiment.accuracy = (sentiment.positive.length + sentiment.negative.length) * 100 / sentiment.meanings.length;
 
   return sentiment;
-}
+};
 
 
 /**
