@@ -164,6 +164,7 @@ function sentimentText(aTextSentences, sLangCode) {
   // Output
   var sentiment = {
     score: 0,
+    comparative: 0,
     vote: 'neutral',
     accuracy: 0,
     meanings: [],
@@ -194,6 +195,9 @@ function sentimentText(aTextSentences, sLangCode) {
   // Returns a percentage of words evaluated as sentimental
   // against all meaningful words (all tokens, stopwords excluded)
   sentiment.accuracy = (sentiment.positive.length + sentiment.negative.length) * 100 / sentiment.meanings.length;
+
+  // Comparative
+  sentiment.comparative = sentiment.score / sentiment.meanings.length;
 
   return sentiment;
 };
