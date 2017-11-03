@@ -10,8 +10,31 @@ var swIt = require('stopwords').italian;
 var swNl = require('stopwords').dutch;
 var swDe = require('stopwords').german;
 
-function tokenize(input) {
-  return (input.constructor === Array) ? input : input
+/**
+ * Split a string into sentences
+ * If tInput is an array, assume it has already been tokenized
+ *
+ * @param tInput
+ * @returns {Array}
+ */
+function sentences(tInput) {
+  if (tInput.length === 0) {
+    return [];
+  }
+  return (tInput.constructor === Array) ? tInput : tInput.split(/(?:\.|?|!|¿|¡|:|;)+/);
+}
+
+/**
+ * Split a sentence into words
+ *
+ * @param sInput
+ * @returns {Array}
+ */
+function words(sInput) {
+  if (sInput.length === 0) {
+    return [];
+  }
+  return (sInput.constructor === Array) ? sInput : sInput
     .toLowerCase()
     .replace(/\r?\n|\r/g, ' ') // line breaks changed to space https://stackoverflow.com/a/10805292
     .replace(/[.,\/#!$%\^&\*;:{}=_`\"~()]/g, '')
@@ -19,74 +42,84 @@ function tokenize(input) {
     .split(' ');
 };
 
-// Performs sentiment analysis on the provided input 'phrase'
-module.exports = function (sPhrase, sLangCode, mCallback) {
 
-  if (typeof sPhrase === 'undefined') {
-    sPhrase = '';
+/**
+ * Split a string into sentences
+ * and split sentences into words
+ * returns an array of arrays
+ *
+ * @param string
+ * @returns {Array}
+ */
+function tokenize(string) {
+  var tokenized = sentences(string);
+  for (var i = 0; i < tokenized.length; i++) {
+    tokenized[i] = words(tokenized[i]);
   }
+  return tokenized;
+};
 
-  // Storage objects
-  var aTokens = tokenize(sPhrase),
-    iGlobalScore = 0,
-    aWords = [],
-    meaningfulWords = [], // tokens/words with stopwords excluded
-    aPositive = [],
-    aNegative = [],
-    bNegation = false;
 
-  // Detect language if needed (beta must be performed on each word for more efficiency)
+/**
+ * sentiment analysis for a sentence/array of tokens
+ * returns an array of objects
+ * @param aSentenceTokens
+ * @returns {Array}
+ */
+function sentimentSentence(aSentenceTokens, sLangCode) {
+
+  // Output
+  var sentiment = {
+    score: 0,
+    meanings: [],
+    positive: [],
+    negative: []
+  };
+  var bNegation: false;
+
+  // Language detection
   if (sLangCode == null) {
-    var aDetectedLang = oLangDetect.detect(aTokens.join(' '), 1);
+    var aDetectedLang = oLangDetect.detect(aSentenceTokens.join(' '), 1);
     if (aDetectedLang[0]) {
       sLangCode = aDetectedLang[0][0].substring(0, 2);
     }
   }
 
   // Iterate over tokens
-  var len = aTokens.length;
-  while (len--) {
-    var sToken = String(aTokens[len]), iCurrentScore = 0;
+  for (var i = 0; i < aSentenceTokens.length; i++) {
+
+    var sToken = String(aSentenceTokens[i]);
+    var tokenScore = 0;
 
     // Negation flag
     if (oDictionary["negations"][sLangCode] && oDictionary["negations"][sLangCode][sToken]) {
       bNegation = true;
     }
 
-    // Is it a stopword?
-    switch (sLangCode) {
-      case 'en':
-        if (swEn.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      case 'fr':
-        if (swFr.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      case 'es':
-        if (swEs.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      case 'it':
-        if (swIt.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      case 'nl':
-        if (swNl.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      case 'de':
-        if (swDe.indexOf(sToken) == -1) {
-          meaningfulWords.push(sToken);
-        }
-        break;
-      default:
-        meaningfulWords.push(sToken);
+    // Is it a stopword or a meaningful word?
+    if (sToken.length > 0) { // sometimes last token is still an empty token (if last char is a \n enter?)
+      switch (sLangCode) {
+        case 'en':
+          if (swEn.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        case 'fr':
+          if (swFr.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        case 'es':
+          if (swEs.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        case 'it':
+          if (swIt.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        case 'nl':
+          if (swNl.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        case 'de':
+          if (swDe.indexOf(sToken) == -1) { sentiment.meanings.push(sToken); }
+          break;
+        default:
+          sentiment.meanings.push(sToken);
+      }
     }
 
     if (! oDictionary[sLangCode] || ! oDictionary[sLangCode][sToken]) {
@@ -94,52 +127,95 @@ module.exports = function (sPhrase, sLangCode, mCallback) {
         continue;
       }
       // It's an emoji
-      iCurrentScore = Number(oDictionary['emoji'][sToken]);
+      tokenScore = Number(oDictionary['emoji'][sToken]);
     } else {
       // It's a word
-      iCurrentScore = Number(oDictionary[sLangCode][sToken]);
+      tokenScore = Number(oDictionary[sLangCode][sToken]);
     }
 
-    aWords.push(String(sToken));
-
-    if (iCurrentScore > 0) {
-      aPositive.push(String(sToken));
-    } else if (iCurrentScore < 0) {
-      aNegative.push(String(sToken));
+    // Push to Positive/Negative array
+    if (tokenScore > 0) {
+      sentiment.positive.push(String(sToken));
+    } else if (tokenScore < 0) {
+      sentiment.negative.push(String(sToken));
     }
-    iGlobalScore += iCurrentScore;
+
+    // Update sentiment score
+    sentiment.score += tokenScore;
+
   }
 
   // Handle negation detection flag
-  iGlobalScore = iGlobalScore * (bNegation === true ? -1 : 1);
+  sentiment.score = sentiment.score * (bNegation === true ? -1 : 1);
 
-  // Handle optional async interface
-  var oResult = {
-    score: iGlobalScore,
-    comparative: iGlobalScore / aTokens.length,
-    comparativeMeaningfull: iGlobalScore / meaningfulWords.length,
+  return sentiment;
+}
+
+
+/**
+ * sentiment analysis for a text/array of sentences/array of tokens
+ * returns an object
+ */
+function sentimentText(aTextSentences, sLangCode) {
+
+  // Output
+  var sentiment = {
+    score: 0,
     vote: 'neutral',
-    tokens: aTokens,
-    meanings: meaningfulWords,
-    words: aWords,
-    positive: aPositive,
-    negative: aNegative,
-    negation: bNegation,
-    language: sLangCode
+    accuracy: 0,
+    meanings: [],
+    positive: [],
+    negative: []
   };
 
-  // Classify text as positive, negative or neutral.
-  if (oResult.score > 0) {
-    oResult.vote = 'positive';
-  } else if (oResult.score < 0) {
-    oResult.vote = 'negative';
+  // Iterate over array of sentences
+  for (var i = 0; i < aTextSentences.length; i++) {
+    var sentenceSentiment = sentimentSentence(aTextSentences[i], sLangCode);
+    sentiment.score += sentenceSentiment.score;
+    sentiment.meanings.concat(sentenceSentiment.meanings);
+    sentiment.positive.concat(sentenceSentiment.positive);
+    sentiment.negative.concat(sentenceSentiment.negative);
   }
 
+  // Handle vote
+  if (sentiment.score > 0) {
+    sentiment.vote = 'positive';
+  } else if (sentiment.score < 0) {
+    sentiment.vote = 'negative';
+  }
+
+  // Accuracy
+  // Returns a percentage of words evaluated as sentimental
+  // against all meaningful words (all tokens, stopwords excluded)
+  sentiment.accuracy = (sentiment.positive.length + sentiment.negative.length) * 100 / sentiment.meanings.length;
+
+  return sentiment;
+}
+
+
+/**
+ * sentiment analysis on the provided input 'text'
+ * returns an object
+ */
+module.exports = function (sText, sLangCode, mCallback) {
+
+  if (typeof sText === 'undefined') {
+    sText = '';
+  }
+
+  // Text is tokenized in an array of sentences
+  // Each sentence is tokenized in an array of words
+  sText = tokenize(sText);
+
+  // Analyse sentiment
+  var sentiment = sentimentText(sText, sLangCode);
+
   if (mCallback == null) {
-    return oResult;
+    return sentiment;
   }
 
   process.nextTick(function () {
-    mCallback(null, oResult);
+    mCallback(null, sentiment);
   });
+
 };
