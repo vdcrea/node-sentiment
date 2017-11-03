@@ -172,9 +172,12 @@ function sentimentText(aTextSentences, sLangCode) {
   for (var i = 0; i < aTextSentences.length; i++) {
     var sentenceSentiment = sentimentSentence(aTextSentences[i], sLangCode);
     sentiment.score += sentenceSentiment.score;
-    sentiment.meanings.concat(sentenceSentiment.meanings);
-    sentiment.positive.concat(sentenceSentiment.positive);
-    sentiment.negative.concat(sentenceSentiment.negative);
+    var meanings = sentiment.meanings.concat(sentenceSentiment.meanings);
+    sentiment.meanings = meanings;
+    var positive = sentiment.positive.concat(sentenceSentiment.positive);
+    sentiment.positive = positive;
+    var negative = sentiment.negative.concat(sentenceSentiment.negative);
+    sentiment.negative = negative;
   }
 
   // Handle vote
