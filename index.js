@@ -75,7 +75,7 @@ function sentimentSentence(aSentenceTokens, sLangCode) {
     positive: [],
     negative: []
   };
-  var bNegation: false;
+  var bNegation = false;
 
   // Language detection
   if (sLangCode == null) {
