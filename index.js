@@ -21,7 +21,7 @@ function sentences(tInput) {
   if (tInput.length === 0) {
     return [];
   }
-  return (tInput.constructor === Array) ? tInput : tInput.split(/(?:\.|?|!|¿|¡|:|;)+/);
+  return (tInput.constructor === Array) ? tInput : tInput.split(/[.?!¿¡:;]/g);
 };
 
 /**
