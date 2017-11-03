@@ -36,9 +36,12 @@ function words(sInput) {
   }
   return (sInput.constructor === Array) ? sInput : sInput
     .toLowerCase()
-    .replace(/\r?\n|\r/g, ' ') // line breaks changed to space https://stackoverflow.com/a/10805292
-    .replace(/[.,\/#!$%\^&\*;:{}=_`\"~()]/g, '')
-    .replace(/\s{2,}/g, ' ') // remove extra spaces https://stackoverflow.com/a/4328722
+    .replace(/\r?\n|\r/g, ' ')  // line breaks changed to space https://stackoverflow.com/a/10805292
+    .replace(/n\'t/g, ' not')   // n't changed to not
+    .replace(/'s/g, ' is')      // 's changed to is
+    .replace(/['’]/g, ' ')      // apos changed to space
+    .replace(/[.,\/#!$%\^&\*;:{}=_`\"~()]/g, '') // remove punctuation
+    .replace(/\s{2,}/g, ' ')    // remove extra spaces https://stackoverflow.com/a/4328722
     .split(' ');
 };
 
