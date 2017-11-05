@@ -1,13 +1,32 @@
-# node-sentiment [![Build Status](https://travis-ci.org/nicolasbonnici/node-sentiment.svg?branch=master)](https://travis-ci.org/nicolasbonnici/node-sentiment)
-### Text and emojis sentiment analysis for Node.js
+# node-sentiment [![Build Status](https://travis-ci.org/vdcrea/node-sentiment.svg?branch=multilingual)](https://travis-ci.org/vdcrea/node-sentiment)
+### Multi-language Text sentiment analysis for Node.js
 
-Sentiment is a Node.js module that uses the [AFINN-111](http://www2.imm.dtu.dk/pubdb/views/publication_details.php?id=6010) wordlist to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
+Sentiment is a Node.js module that uses the https://sites.google.com/site/datascienceslab/projects/multilingualsentiment wordlists to perform [sentiment analysis](http://en.wikipedia.org/wiki/Sentiment_analysis) on arbitrary blocks of input text.
 
-Sentiment analysis is suitable at a sentence level, for long strings, please tokenize sentences and use sentiment on every chunk.
+This is a very basic/binary Sentiment analysis without negation. It's binary because no weight value is associated to the words.
 
-Multilanguage, only full support for english and french (PR contributions are welcome)
+Lot of sentiment modules performs more accurate results for sentiment analysis. They are almost all specific to a language. This module aims to let you have consistent and comparable results across multiple languages.
 
-He has full support on emoji analysis.
+Multi-lang support for:
+- ar: Arabic
+- bn: Bengali
+- da: Danish
+- de: German
+- en: English
+- es: Spanish
+- fa: Farsi
+- fr: French
+- hi: Hindi
+- it: Italian
+- ja: Japanese
+- no: Norwegian
+- pl: Polish
+- pt: Portuguese
+- ru: Russian
+- sv: Swedish
+- zh: Chinese
+
+He has not yet support on emoji analysis.
 
 Language detection if not provided at call.
 
@@ -16,7 +35,7 @@ This project is a fork of the original sentiment project: https://github.com/thi
 # Usage
 
 ## Installation
-`npm install node-sentiment --save`
+`npm install git://github.com/vdcrea/node-sentiment.git#multilingual --save`
 
 
 ```javascript
@@ -78,13 +97,3 @@ node cli.js "Cats are not so cool..."
 ```bash
 npm test
 ```
-
-# Changelog
-
-### 18/07/2017 Minor release 0.0.5
-Whole code review
-Basic CLI interface added and project renamed to node-sentiment for npm package
-
-### 17/07/2017 Minor release 0.0.4
-Negation detection fix
-Language detection feature POC added
